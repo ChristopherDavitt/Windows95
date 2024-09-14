@@ -1,95 +1,149 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+"use client";
+
+import React, { useState } from 'react';
+import { Button, Toolbar, List, ListItem, Separator } from 'react95';
+import DraggableWindow from '../components/DraggableWindow';
+import SnakeGame from '@/components/SnakeGame';
+import styled from 'styled-components';
+import DesktopIcon from '@/components/DesktopIcon';
+import Clock from '@/components/Clock';
+import Minesweeper from '@/components/Minesweeper';
+
+const TaskBar = styled(Toolbar)`
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 4px;
+`;
+
+const StartButton = styled(Button)`
+  font-weight: bold;
+`;
+
+const TaskBarItem = styled(Button)`
+  margin-left: 4px;
+`;
+const TaskBarLeft = styled.div`
+  display: flex;
+`;
+
+const TaskBarRight = styled.div`
+  display: flex;
+  align-items: center;
+  position: absolute;
+  right: 8px;
+`;
+const Desktop = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  height: calc(100vh - 40px);
+  padding: 20px;
+`;
 
 export default function Home() {
-  return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>src/app/page.tsx</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [showWindow, setShowWindow] = useState(false);
+  const [showSnakeGame, setShowSnakeGame] = useState(false);
+  const [showStartMenu, setShowStartMenu] = useState(false);
+  const [showMinesweeper, setShowMinesweeper] = useState(false);
+  const clockRef = React.useRef<HTMLDivElement>(null);
 
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+  return (
+    <div style={{ overflow: 'hidden', background: '#008080', height: '100vh', padding: '20px' }}>
+      <Desktop>
+        <DesktopIcon
+          initialPosition={{ x: -20, y: 0 }}
+          icon="ℹ️"
+          label="$ABC Info"
+          onDoubleClick={() => setShowWindow(true)}
+        />
+        <DesktopIcon
+          initialPosition={{ x: -20, y: 80 }}
+          icon="🐍"
+          label="Snake Game"
+          onDoubleClick={() => setShowSnakeGame(true)}
+        />
+        <DesktopIcon
+          icon="💣"
+          label="Minesweeper"
+          onDoubleClick={() => setShowMinesweeper(true)}
+          initialPosition={{ x: -20, y: 160 }}
+        />
+      </Desktop>
+      {showWindow && (
+        <DraggableWindow
+          title="Autistic Boys Club"
+          onClose={() => setShowWindow(false)}
+        >
+          <p>Welcome to the club!</p>
+        </DraggableWindow>
+      )}
+
+      {showSnakeGame && (
+        <DraggableWindow
+          title="Snake Game"
+          onClose={() => setShowSnakeGame(false)}
+        >
+          <SnakeGame />
+        </DraggableWindow>
+      )}
+       {showMinesweeper && (
+          <DraggableWindow
+            title="Minesweeper"
+            onClose={() => setShowMinesweeper(false)}
           >
-            <Image
-              className={styles.logo}
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
+            <Minesweeper />
+          </DraggableWindow>
+        )}
+
+      <TaskBar style={{ background: '#D9BF09' }}>
+        <TaskBarLeft>
+          <StartButton onClick={() => setShowStartMenu(!showStartMenu)}>
+            Start
+          </StartButton>
+          {showWindow && (
+            <TaskBarItem onClick={() => setShowWindow(true)}>
+              My First Window
+            </TaskBarItem>
+          )}
+          {showSnakeGame && (
+            <TaskBarItem onClick={() => setShowSnakeGame(true)}>
+              Snake Game
+            </TaskBarItem>
+          )}
+          {showMinesweeper && (
+            <TaskBarItem onClick={() => setShowMinesweeper(true)}>
+              Minesweeper
+            </TaskBarItem>
+          )}
+        </TaskBarLeft>
+        <TaskBarRight ref={clockRef}>
+          <Clock />
+        </TaskBarRight>
+        {showStartMenu && (
+          <List
+            style={{
+              position: 'absolute',
+              left: '0',
+              bottom: '100%',
+            }}
+            onClick={() => setShowStartMenu(false)}
           >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+            <ListItem onClick={() => setShowWindow(true)}>
+              $ABC Info
+            </ListItem>
+            <ListItem onClick={() => setShowSnakeGame(true)}>
+              Snake Game
+            </ListItem>
+            <ListItem onClick={() => setShowMinesweeper(true)}>
+              Minesweeper
+            </ListItem>
+            <Separator />
+            <ListItem>Shut Down...</ListItem>
+          </List>
+        )}
+      </TaskBar>
     </div>
   );
 }
