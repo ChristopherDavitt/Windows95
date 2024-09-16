@@ -11,32 +11,6 @@ const Grid = styled.div`
   padding: 3px;
 `;
 
-const Cell = styled(Button)<{ $revealed: boolean; $value: number | 'mine' }>`
-  width: 20px;
-  height: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  font-weight: bold;
-  color: ${props => {
-    if (props.$revealed) {
-      switch (props.$value) {
-        case 1: return 'blue';
-        case 2: return 'green';
-        case 3: return 'red';
-        case 4: return 'purple';
-        case 5: return 'maroon';
-        case 6: return 'turquoise';
-        case 7: return 'black';
-        case 8: return 'gray';
-        default: return 'black';
-      }
-    }
-    return 'black';
-  }};
-`;
-
 const GameContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -47,14 +21,16 @@ const ResetButton = styled(Button)`
   margin-bottom: 10px;
 `;
 
+type CellValue = number | 'mine';
+
 type CellType = {
-  value: number | 'mine';
+  value: CellValue;
   revealed: boolean;
   flagged: boolean;
 };
 
 const createBoard = (): CellType[][] => {
-  const board = Array(9).fill(null).map(() => 
+  const board: CellType[][] = Array(9).fill(null).map(() => 
     Array(9).fill(null).map(() => ({ value: 0, revealed: false, flagged: false }))
   );
 
@@ -88,6 +64,43 @@ const createBoard = (): CellType[][] => {
 
   return board;
 };
+
+const CellBase = styled.div`
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
+`;
+
+const CellButton = styled(Button)`
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
+`;
+
+const RevealedCell = styled(CellBase)<{ $value: number | 'mine' }>`
+  background-color: #d3d3d3;
+  color: ${props => {
+    switch (props.$value) {
+      case 1: return 'blue';
+      case 2: return 'green';
+      case 3: return 'red';
+      case 4: return 'purple';
+      case 5: return 'maroon';
+      case 6: return 'turquoise';
+      case 7: return 'black';
+      case 8: return 'gray';
+      default: return 'black';
+    }
+  }};
+`;
 
 const Minesweeper: React.FC = () => {
   const [board, setBoard] = useState<CellType[][]>(createBoard());
@@ -135,21 +148,22 @@ const Minesweeper: React.FC = () => {
       <Grid>
         {board.map((row, rowIndex) =>
           row.map((cell, colIndex) => (
-            <Cell
-              key={`${rowIndex}-${colIndex}`}
-              onClick={() => revealCell(rowIndex, colIndex)}
-              onContextMenu={(e) => flagCell(e, rowIndex, colIndex)}
-              $revealed={cell.revealed}
-              $value={cell.value}
-            >
-              {cell.revealed
-                ? cell.value === 'mine'
-                  ? '💣'
-                  : cell.value || ''
-                : cell.flagged
-                ? '🚩'
-                : ''}
-            </Cell>
+            cell.revealed ? (
+              <RevealedCell
+                key={`${rowIndex}-${colIndex}`}
+                $value={cell.value}
+              >
+                {cell.value === 'mine' ? '💣' : cell.value || ''}
+              </RevealedCell>
+            ) : (
+              <CellButton
+                key={`${rowIndex}-${colIndex}`}
+                onClick={() => revealCell(rowIndex, colIndex)}
+                onContextMenu={(e) => flagCell(e, rowIndex, colIndex)}
+              >
+                {cell.flagged ? '🚩' : ''}
+              </CellButton>
+            )
           ))
         )}
       </Grid>

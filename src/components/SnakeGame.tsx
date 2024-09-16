@@ -46,6 +46,15 @@ const SnakeGame: React.FC = () => {
           break
       }
 
+      // Check if snake hits itself
+      if (newSnake.some((segment) => segment.x === head.x && segment.y === head.y)) {
+        setGameOver(true)
+        return prevSnake
+      }
+
+      newSnake.unshift(head)
+
+      // Check if snake eats food
       if (head.x === food.x && head.y === food.y) {
         setFood({
           x: Math.floor(Math.random() * 20),
@@ -55,12 +64,6 @@ const SnakeGame: React.FC = () => {
         newSnake.pop()
       }
 
-      if (newSnake.some((segment) => segment.x === head.x && segment.y === head.y)) {
-        setGameOver(true)
-        return prevSnake
-      }
-
-      newSnake.unshift(head)
       return newSnake
     })
   }, [direction, food, gameOver])
@@ -69,16 +72,16 @@ const SnakeGame: React.FC = () => {
     const handleKeyPress = (e: KeyboardEvent) => {
       switch (e.key) {
         case 'ArrowUp':
-          setDirection('UP')
+          setDirection((prev) => prev !== 'DOWN' ? 'UP' : prev)
           break
         case 'ArrowDown':
-          setDirection('DOWN')
+          setDirection((prev) => prev !== 'UP' ? 'DOWN' : prev)
           break
         case 'ArrowLeft':
-          setDirection('LEFT')
+          setDirection((prev) => prev !== 'RIGHT' ? 'LEFT' : prev)
           break
         case 'ArrowRight':
-          setDirection('RIGHT')
+          setDirection((prev) => prev !== 'LEFT' ? 'RIGHT' : prev)
           break
       }
     }
@@ -92,6 +95,13 @@ const SnakeGame: React.FC = () => {
     return () => clearInterval(gameLoop)
   }, [moveSnake])
 
+  const resetGame = () => {
+    setSnake([{ x: 10, y: 10 }])
+    setFood({ x: 15, y: 15 })
+    setDirection('RIGHT')
+    setGameOver(false)
+  }
+
   return (
     <div>
       <GameBoard>
@@ -103,7 +113,12 @@ const SnakeGame: React.FC = () => {
           return <Cell key={index} $isSnake={isSnake} $isFood={isFood} />
         })}
       </GameBoard>
-      {gameOver && <p>Game Over! Refresh to play again.</p>}
+      {gameOver && (
+        <div>
+          <p>Game Over! Your score: {snake.length - 1}</p>
+          <button onClick={resetGame}>Play Again</button>
+        </div>
+      )}
     </div>
   )
 }

@@ -13,7 +13,7 @@ interface DraggableWindowProps {
 const DraggableWindow: React.FC<DraggableWindowProps> = ({ title, children, onClose }) => {
   return (
     <Draggable handle=".window-header" bounds="parent">
-      <div style={{ position: 'absolute', zIndex: 1, top: '50px', left: '50px' }}>
+      <div style={{ position: 'absolute', zIndex: 3, top: '50px', left: '50px' }}>
         <Window style={{ width: 400 }}>
           <WindowHeader className="window-header">
             <span>{title}</span>

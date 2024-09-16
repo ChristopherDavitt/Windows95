@@ -8,8 +8,9 @@ const IconWrapper = styled.div<{ $isActive: boolean }>`
   align-items: center;
   width: 64px;
   cursor: pointer;
+  z-index: 2;
   padding: 5px;
-  border: ${props => props.$isActive ? '1px dashed #fff' : '1px solid transparent'};
+  border: ${props => props.$isActive ? '1px dashed black' : '1px solid transparent'};
   position: absolute;
 `;
 
@@ -17,18 +18,19 @@ const IconImage = styled.div`
   width: 32px;
   height: 32px;
   background-color: #fff;
-  border: 1px solid #000;
   display: flex;
   justify-content: center;
   align-items: center;
 `;
 
 const IconText = styled.span`
-  color: #fff;
+  color: black;
   text-align: center;
   margin-top: 5px;
+  font-weight: 500;
+
   font-size: 12px;
-  text-shadow: 1px 1px 1px #000;
+  text-shadow: 1px 1px 1px white;
 `;
 
 interface DesktopIconProps {
