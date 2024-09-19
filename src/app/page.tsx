@@ -54,18 +54,17 @@ export default function Home() {
         height: '100vh',
         width: '100vw',
         zIndex: 1,
-        padding: '20px',
         backgroundSize: 'cover',
         backgroundPosition: 'top',
       }}>
-        <Desktop style={{ marginTop: '28px' }}>
+        <Desktop>
           <DesktopIcon
-            initialPosition={{ x: -20, y: 0 }}
+            initialPosition={{ x: 0, y: 0 }}
             icon="ℹ️"
             label="$ABC Info"
             onDoubleClick={() => setShowWindow(true)} />
           <DesktopIcon
-            initialPosition={{ x: -20, y: 80 }}
+            initialPosition={{ x: 0, y: 80 }}
             icon="🐍"
             label="Snake Game"
             onDoubleClick={() => setShowSnakeGame(true)} />
@@ -73,14 +72,14 @@ export default function Home() {
             icon="💣"
             label="Minesweeper"
             onDoubleClick={() => setShowMinesweeper(true)}
-            initialPosition={{ x: -20, y: 160 }} />
+            initialPosition={{ x: 0, y: 160 }} />
         </Desktop>
         {showWindow && (
           <DraggableWindow
             title="Autistic Boys Club"
             onClose={() => setShowWindow(false)}
           >
-            <p>Welcome to the club!</p>
+            <p>Sending Avax autists back to nursery to learn how not to jeet</p>
           </DraggableWindow>
         )}
 

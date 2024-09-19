@@ -1,7 +1,14 @@
 'use client'
 
 import React, { useState, useEffect, useCallback } from 'react'
+import { Button } from 'react95'
 import styled from 'styled-components'
+
+const GameContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`
 
 const GameBoard = styled.div`
   display: grid;
@@ -9,11 +16,17 @@ const GameBoard = styled.div`
   grid-template-rows: repeat(20, 1fr);
   width: 300px;
   height: 300px;
-  border: 2px solid #000;
+  background-color: #bdbdbd;
+  border: 3px solid #7b7b7b;
+  padding: 3px;
 `
 
 const Cell = styled.div<{ $isSnake: boolean; $isFood: boolean }>`
-  background-color: ${(props) => (props.$isSnake ? '#000' : props.$isFood ? '#f00' : '#fff')};
+  background-color: ${(props) => (props.$isSnake ? '#000' : props.$isFood ? '#f00' : '#bdbdbd')};
+`
+
+const ResetButton = styled(Button)`
+  margin-bottom: 10px;
 `
 
 type Position = { x: number; y: number }
@@ -103,7 +116,8 @@ const SnakeGame: React.FC = () => {
   }
 
   return (
-    <div>
+    <GameContainer>
+      <ResetButton onClick={resetGame}>Reset Game</ResetButton>
       <GameBoard>
         {Array.from({ length: 400 }).map((_, index) => {
           const x = index % 20
@@ -116,10 +130,10 @@ const SnakeGame: React.FC = () => {
       {gameOver && (
         <div>
           <p>Game Over! Your score: {snake.length - 1}</p>
-          <button onClick={resetGame}>Play Again</button>
+          <Button onClick={resetGame}>Play Again</Button>
         </div>
       )}
-    </div>
+    </GameContainer>
   )
 }
 
