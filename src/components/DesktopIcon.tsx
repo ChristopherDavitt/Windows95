@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useRef } from 'react';
 import Draggable from 'react-draggable';
 import styled from 'styled-components';
 
@@ -36,58 +36,13 @@ const IconText = styled.span`
 interface DesktopIconProps {
   icon: string;
   label: string;
-  onDoubleClick: () => void;
+  onClick: () => void;
   initialPosition: { x: number; y: number };
 }
 
-const DesktopIcon: React.FC<DesktopIconProps> = ({ icon, label, onDoubleClick, initialPosition }) => {
-  const [isActive, setIsActive] = useState(false);
+const DesktopIcon: React.FC<DesktopIconProps> = ({ icon, label, initialPosition, onClick }) => {
+  const [isActive] = useState(false);
   const iconRef = useRef<HTMLDivElement>(null);
-  const isMobile = useRef(false);
-  const tapTimer = useRef<NodeJS.Timeout | null>(null);
-  const doubleTapDelta = 300; // ms
-
-  useEffect(() => {
-    isMobile.current = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-  }, []);
-
-  const handleTap = useCallback(() => {
-    if (tapTimer.current === null) {
-      // First tap
-      setIsActive(true);
-      tapTimer.current = setTimeout(() => {
-        tapTimer.current = null;
-      }, doubleTapDelta);
-    } else {
-      // Second tap
-      clearTimeout(tapTimer.current);
-      tapTimer.current = null;
-      onDoubleClick();
-      setIsActive(false);
-    }
-  }, [onDoubleClick]);
-
-
-  const handleBlur = () => {
-    setIsActive(false);
-  };
-
-
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!isMobile.current) {
-      handleTap();
-    }
-  };
-
-  useEffect(() => {
-    return () => {
-      if (tapTimer.current) {
-        clearTimeout(tapTimer.current);
-      }
-    };
-  }, []);
 
   return (
     <Draggable
@@ -99,8 +54,7 @@ const DesktopIcon: React.FC<DesktopIconProps> = ({ icon, label, onDoubleClick, i
     <IconWrapper
       ref={iconRef}
       $isActive={isActive}
-      onBlur={handleBlur}
-      onClick={handleClick}
+      onClick={onClick}
       tabIndex={0}
     >
       <IconImage>{icon}</IconImage>

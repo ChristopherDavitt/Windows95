@@ -1,21 +1,21 @@
 "use client";
 
 import React, { useState } from 'react';
-import { Button, Toolbar, List, ListItem, Separator, AppBar } from 'react95';
+import { Button, Toolbar, Separator, AppBar, MenuList, MenuListItem } from 'react95';
 import DraggableWindow from '../components/DraggableWindow';
 import SnakeGame from '@/components/SnakeGame';
 import styled from 'styled-components';
 import DesktopIcon from '@/components/DesktopIcon';
-import Clock from '@/components/Clock';
 import Minesweeper from '@/components/Minesweeper';
 import Image from 'next/image';
+import CustomConnectButton from '@/components/CustomConnectButton';
+import MintModal from '@/components/MintModal';
 
-const StartButton = styled(Button)`
-  font-weight: bold;
-`;
-
-const TaskBarItem = styled(Button)`
-  margin-left: 4px;
+const MenuItem  = styled(MenuListItem)`
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  cursor: pointer;
 `;
 
 const Desktop = styled.div`
@@ -45,8 +45,7 @@ export default function Home() {
   const [showSnakeGame, setShowSnakeGame] = useState(false);
   const [showStartMenu, setShowStartMenu] = useState(false);
   const [showMinesweeper, setShowMinesweeper] = useState(false);
-  const clockRef = React.useRef<HTMLDivElement>(null);
-
+  const [showMintModal, setShowMintModal] = useState(false);
   return (
     <>
       <div style={{
@@ -62,16 +61,22 @@ export default function Home() {
             initialPosition={{ x: 0, y: 0 }}
             icon="ℹ️"
             label="$ABC Info"
-            onDoubleClick={() => setShowWindow(true)} />
+            onClick={() => setShowWindow(true)} />
           <DesktopIcon
             initialPosition={{ x: 0, y: 80 }}
             icon="🐍"
             label="Snake Game"
-            onDoubleClick={() => setShowSnakeGame(true)} />
+            onClick={() => setShowSnakeGame(true)} />
+          <DesktopIcon
+            initialPosition={{ x: 0, y: 240 }}
+            icon="🖼️"
+            label="Mint NFT"
+            onClick={() => setShowMintModal(true)}
+          />
           <DesktopIcon
             icon="💣"
             label="Minesweeper"
-            onDoubleClick={() => setShowMinesweeper(true)}
+            onClick={() => setShowMinesweeper(true)}
             initialPosition={{ x: 0, y: 160 }} />
         </Desktop>
         {showWindow && (
@@ -82,7 +87,9 @@ export default function Home() {
             <p>Sending Avax autists back to nursery to learn how not to jeet</p>
           </DraggableWindow>
         )}
-
+        {showMintModal && (
+          <MintModal onClose={() => setShowMintModal(false)} />
+        )}
         {showSnakeGame && (
           <DraggableWindow
             title="Snake Game"
@@ -102,53 +109,61 @@ export default function Home() {
 
         <BottomAppBar>
           <AppBarContent>
-            <div style={{ position: 'relative', display: 'inline-block', zIndex: 1 }}>
-              <StartButton onClick={() => setShowStartMenu(!showStartMenu)}>
-                Start
-              </StartButton>
-              {showWindow && (
-                <TaskBarItem onClick={() => setShowWindow(true)}>
-                  $ABC Info
-                </TaskBarItem>
-              )}
-              {showSnakeGame && (
-                <TaskBarItem onClick={() => setShowSnakeGame(true)}>
-                  Snake Game
-                </TaskBarItem>
-              )}
-              {showMinesweeper && (
-                <TaskBarItem onClick={() => setShowMinesweeper(true)}>
-                  Minesweeper
-                </TaskBarItem>
-              )}
-            </div>
-            <div ref={clockRef}>
-              <Clock />
-            </div>
-          </AppBarContent>
+          <div style={{ position: 'relative', display: 'inline-block' }}>
+          <Button
+            onClick={() => setShowStartMenu(!showStartMenu)}
+            active={showStartMenu}
+            style={{ fontWeight: 'bold' }}
+          >
+            Start
+          </Button>
           {showStartMenu && (
-            <List
+            <MenuList
               style={{
                 position: 'absolute',
-                left: '4px', // Align with the Start button
-                bottom: '100%',
-                zIndex: 9999, // Ensure it's above other elements
+                left: '0',
+                bottom: '100%'
               }}
               onClick={() => setShowStartMenu(false)}
             >
-              <ListItem onClick={() => setShowWindow(true)}>
-                $ABC Info
-              </ListItem>
-              <ListItem onClick={() => setShowSnakeGame(true)}>
-                Snake Game
-              </ListItem>
-              <ListItem onClick={() => setShowMinesweeper(true)}>
-                Minesweeper
-              </ListItem>
+              <a href="https://x.com/AvaxABC">
+                <MenuItem>
+                  <span role='img' aria-label='👨‍💻'>
+                    <Image src="/twitter.png" alt="Twitter" width={20} height={20} />
+                  </span>
+                  Twitter
+                </MenuItem>
+              </a>
+              <a href="https://t.me/AvaxABC">
+                <MenuItem>
+                  <span role='img' aria-label='📁'>
+                    <Image src="/telegram.png" alt="Telegram" width={20} height={20} />
+                  </span>
+                  Telegram
+                </MenuItem>
+              </a>
+              <a href="https://arena.social/AvaxABC">
+              <MenuItem>
+                <span role='img' aria-label='📁'>
+                  <Image src="/arena.jpg" alt="Arena" width={20} height={20} />
+                </span>
+                Arena
+              </MenuItem>
+              </a>
               <Separator />
-              <ListItem>Shut Down...</ListItem>
-            </List>
-          )}
+              <MenuItem disabled>
+                <span role='img' aria-label='🔙'>
+                  🔙
+                </span>
+                Logout
+              </MenuItem>
+            </MenuList>
+            )}
+          </div>
+            <div>
+              <CustomConnectButton />
+            </div>
+          </AppBarContent>
         </BottomAppBar>
       </div>
       <div>
