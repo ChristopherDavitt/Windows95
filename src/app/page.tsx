@@ -59,22 +59,22 @@ export default function Home() {
         <Desktop>
           <DesktopIcon
             initialPosition={{ x: 0, y: 0 }}
-            icon="ℹ️"
+            icon="/jdbgmgr_100.ico"
             label="$ABC Info"
             onClick={() => setShowWindow(true)} />
           <DesktopIcon
             initialPosition={{ x: 0, y: 80 }}
-            icon="🐍"
+            icon="/joy_110.ico"
             label="Snake Game"
             onClick={() => setShowSnakeGame(true)} />
           <DesktopIcon
             initialPosition={{ x: 0, y: 240 }}
-            icon="🖼️"
+            icon="/pbrush_1.ico"
             label="Mint NFT"
             onClick={() => setShowMintModal(true)}
           />
           <DesktopIcon
-            icon="💣"
+            icon="/winmine_1.ico"
             label="Minesweeper"
             onClick={() => setShowMinesweeper(true)}
             initialPosition={{ x: 0, y: 160 }} />
